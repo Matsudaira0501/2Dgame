@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameClearManager : MonoBehaviour
@@ -11,8 +13,13 @@ public class GameClearManager : MonoBehaviour
     [SerializeField]
     private string clearMessage = "Game Clear!";
 
+    [SerializeField]
+    private float restartDelay = 3f;
+
     private int remainingCoins;
     private bool isCleared;
+
+    public bool IsCleared => isCleared;
 
     void Awake()
     {
@@ -74,6 +81,15 @@ public class GameClearManager : MonoBehaviour
         }
 
         Debug.Log(clearMessage);
+        StartCoroutine(RestartAfterClear());
+    }
+
+    private IEnumerator RestartAfterClear()
+    {
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(restartDelay);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private Text CreateClearText()

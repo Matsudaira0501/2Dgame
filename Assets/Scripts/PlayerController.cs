@@ -4,12 +4,13 @@ using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpPower = 7f;
     public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
+    public Vector2 groundCheckSize = new Vector2(0.8f, 0.1f);
     public LayerMask groundLayer;
     public bool autoFitColliderToSprite = true;
     [Range(0.1f, 1f)]
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D bodyCollider;
     [SerializeField]
+    private SpriteRenderer sr;
     private bool isGrounded;
     private bool isRestarting;
 
@@ -29,12 +31,19 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         bodyCollider = GetComponent<BoxCollider2D>();
+        sr = GetComponent<SpriteRenderer>();
         rb.freezeRotation = true;
         FitColliderToSprite();
     }
 
     void Update()
     {
+        if (GameClearManager.Instance != null && GameClearManager.Instance.IsCleared)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         CheckFallRestart();
 
         Keyboard keyboard = Keyboard.current;
@@ -47,11 +56,13 @@ public class PlayerController : MonoBehaviour
         if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed)
         {
             move -= 1f;
+            sr.flipX = true;
         }
 
         if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed)
         {
             move += 1f;
+            sr.flipX = false;
         }
 
         rb.linearVelocity = new Vector2(move * moveSpeed, rb.linearVelocity.y);
@@ -72,7 +83,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        isGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer);
     }
 
     void CheckFallRestart()
@@ -116,10 +127,10 @@ public class PlayerController : MonoBehaviour
 
         if (groundCheck != null)
         {
-            float localRadius = groundCheckRadius / Mathf.Max(Mathf.Abs(transform.localScale.y), 0.0001f);
+            float localHalfHeight = groundCheckSize.y * 0.5f / Mathf.Max(Mathf.Abs(transform.localScale.y), 0.0001f);
             groundCheck.localPosition = new Vector3(
                 bodyCollider.offset.x,
-                bodyCollider.offset.y - (bodyCollider.size.y * 0.5f) - localRadius,
+                bodyCollider.offset.y - (bodyCollider.size.y * 0.5f) - localHalfHeight,
                 groundCheck.localPosition.z);
         }
     }
@@ -132,6 +143,6 @@ public class PlayerController : MonoBehaviour
         }
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
     }
 }
