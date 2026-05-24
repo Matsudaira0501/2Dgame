@@ -18,6 +18,7 @@ public static class CoinFeatureSceneSetup
         GameObject gameManager = EnsureGameManager();
         EnsureScoreManager(gameManager);
         EnsureGameClearManager(gameManager);
+        EnsureTutorialManager(gameManager);
         EnsureCoins();
         EnsureScoreUi();
 
@@ -50,6 +51,14 @@ public static class CoinFeatureSceneSetup
         if (Object.FindAnyObjectByType<GameClearManager>() == null)
         {
             gameManager.AddComponent<GameClearManager>();
+        }
+    }
+
+    private static void EnsureTutorialManager(GameObject gameManager)
+    {
+        if (Object.FindAnyObjectByType<TutorialManager>() == null)
+        {
+            gameManager.AddComponent<TutorialManager>();
         }
     }
 
@@ -118,6 +127,7 @@ public static class CoinFeatureSceneSetup
     private static void EnsureScoreUi()
     {
         Canvas canvas = Object.FindAnyObjectByType<Canvas>();
+        Font displayFont = LoadDisplayFont();
         if (canvas == null)
         {
             GameObject canvasObject = new GameObject("Canvas");
@@ -134,13 +144,15 @@ public static class CoinFeatureSceneSetup
             textObject.transform.SetParent(canvas.transform, false);
 
             Text text = textObject.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")
-                ?? Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 32;
-            text.color = Color.white;
+            text.font = displayFont;
+            text.fontSize = 48;
+            text.color = Color.black;
             text.alignment = TextAnchor.MiddleLeft;
             text.text = "Score: 0";
-            textObject.AddComponent<ScoreText>();
+            ScoreText scoreText = textObject.AddComponent<ScoreText>();
+            SerializedObject scoreTextObject = new SerializedObject(scoreText);
+            scoreTextObject.FindProperty("displayFont").objectReferenceValue = displayFont;
+            scoreTextObject.ApplyModifiedProperties();
 
             RectTransform rectTransform = textObject.GetComponent<RectTransform>();
             rectTransform.anchorMin = new Vector2(0f, 1f);
@@ -159,10 +171,9 @@ public static class CoinFeatureSceneSetup
             clearTextObject.transform.SetParent(canvas.transform, false);
 
             Text text = clearTextObject.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")
-                ?? Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = 48;
-            text.color = Color.yellow;
+            text.font = displayFont;
+            text.fontSize = 72;
+            text.color = Color.black;
             text.alignment = TextAnchor.MiddleCenter;
             text.text = "Game Clear!";
 
@@ -183,6 +194,15 @@ public static class CoinFeatureSceneSetup
             SerializedObject serializedObject = new SerializedObject(gameClearManager);
             serializedObject.FindProperty("clearText").objectReferenceValue =
                 clearTextObject.GetComponent<Text>();
+            serializedObject.FindProperty("displayFont").objectReferenceValue = displayFont;
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        TutorialManager tutorialManager = Object.FindAnyObjectByType<TutorialManager>();
+        if (tutorialManager != null)
+        {
+            SerializedObject serializedObject = new SerializedObject(tutorialManager);
+            serializedObject.FindProperty("displayFont").objectReferenceValue = displayFont;
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -193,6 +213,17 @@ public static class CoinFeatureSceneSetup
             eventSystem.AddComponent<StandaloneInputModule>();
             Undo.RegisterCreatedObjectUndo(eventSystem, "Create EventSystem");
         }
+    }
+
+    private static Font LoadDisplayFont()
+    {
+        Font font = AssetDatabase.LoadAssetAtPath<Font>(
+            "Assets/font/Futehodo-MaruGothic_1.03/Futehodo-MaruGothic.ttf");
+
+        return font != null
+            ? font
+            : Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")
+                ?? Resources.GetBuiltinResource<Font>("Arial.ttf");
     }
 #endif
 }

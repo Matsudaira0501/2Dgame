@@ -10,6 +10,10 @@ public class CoinPickup : MonoBehaviour
     private AudioClip collectSound;
 
     [SerializeField]
+    [Range(0f, 2f)]
+    private float collectSoundVolume = 1.5f;
+
+    [SerializeField]
     private bool destroyOnCollect = true;
 
     private bool collected;
@@ -54,7 +58,7 @@ public class CoinPickup : MonoBehaviour
 
         if (collectSound != null)
         {
-            AudioSource.PlayClipAtPoint(collectSound, collectorPosition);
+            AudioSource.PlayClipAtPoint(collectSound, collectorPosition, collectSoundVolume);
         }
 
         if (destroyOnCollect)

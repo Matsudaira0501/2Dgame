@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float colliderHeightRatio = 0.95f;
     public bool restartOnFall = true;
     public float fallRestartY = -8f;
+    public AudioClip jumpSound;
 
     private Rigidbody2D rb;
     private BoxCollider2D bodyCollider;
@@ -69,9 +70,13 @@ public class PlayerController : MonoBehaviour
 
         CheckGround();
 
-        if (keyboard.spaceKey.wasPressedThisFrame && isGrounded)
+        if ((keyboard.spaceKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame) && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+            if (jumpSound != null)
+            {
+                AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+            }
         }
     }
 

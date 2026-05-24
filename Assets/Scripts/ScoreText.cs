@@ -10,11 +10,21 @@ public class ScoreText : MonoBehaviour
     [SerializeField]
     private string prefix = "Score: ";
 
+    [SerializeField]
+    private Font displayFont;
+
     private Text text;
 
     void Awake()
     {
         text = GetComponent<Text>();
+        if (displayFont != null)
+        {
+            text.font = displayFont;
+        }
+
+        text.fontSize = 48;
+        text.color = Color.black;
     }
 
     void OnEnable()
