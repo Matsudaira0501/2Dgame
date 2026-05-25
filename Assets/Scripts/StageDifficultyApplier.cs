@@ -26,12 +26,16 @@ public class StageDifficultyApplier : MonoBehaviour
     [SerializeField]
     private GameObject[] spikeObjects;
 
+    [SerializeField]
+    private PlayerController playerController;
+
     void Awake()
     {
         SetObjectsActive(coinIncreaseCoins, DifficultySettings.CoinIncrease);
         ApplyCoinPositions();
         ApplyPlatformDifficulty();
         ApplySpikeDifficulty();
+        ApplyForceJumpDifficulty();
     }
 
     private void SetObjectsActive(GameObject[] objects, bool isActive)
@@ -103,6 +107,14 @@ public class StageDifficultyApplier : MonoBehaviour
     private void ApplySpikeDifficulty()
     {
         SetObjectsActive(spikeObjects, DifficultySettings.SpikeIncrease);
+    }
+
+    private void ApplyForceJumpDifficulty()
+    {
+        if (playerController != null)
+        {
+            playerController.SetForceJumpOnLanding(DifficultySettings.ForceJump);
+        }
     }
 
     void OnDrawGizmos()

@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 88159527}
   - component: {fileID: 88159526}
   m_Layer: 0
-  m_Name: PlatformSwitch_Label (3)
+  m_Name: ForcedjumpSwitch_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -489,7 +489,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88159525}
-  m_Text: "\u3082\u3063\u3068\uFF01\u30B3\u30A4\u30F3\u5897\u52A0"
+  m_Text: "\u5F37\u5236\u30B8\u30E3\u30F3\u30D7"
   m_OffsetZ: 0
   m_CharacterSize: 0.08
   m_LineSpacing: 1
@@ -942,7 +942,7 @@ GameObject:
   - component: {fileID: 202498125}
   - component: {fileID: 202498124}
   m_Layer: 0
-  m_Name: PlatformSwitch (1)
+  m_Name: SpikeSwitch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1203,7 +1203,7 @@ GameObject:
   - component: {fileID: 280246692}
   - component: {fileID: 280246691}
   m_Layer: 0
-  m_Name: PlatformSwitch (3)
+  m_Name: ForcedjumpSwitch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1225,7 +1225,7 @@ MonoBehaviour:
   offSprite: {fileID: 21300000, guid: 9a0a4f6fcb244df3b3dbd0402e5a6f01, type: 3}
   onSprite: {fileID: 21300000, guid: d7c6c6dd220b41f7a6b890bde45734d2, type: 3}
   isOn: 0
-  switchType: 0
+  switchType: 5
 --- !u!61 &280246692
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1585,7 +1585,7 @@ GameObject:
   - component: {fileID: 630646303}
   - component: {fileID: 630646302}
   m_Layer: 0
-  m_Name: PlatformSwitch_Label (1)
+  m_Name: SpikeSwitch_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1738,6 +1738,7 @@ MonoBehaviour:
   restartOnFall: 1
   fallRestartY: -8
   jumpSound: {fileID: 8300000, guid: e58bbaaed8235394994e39ac7d594773, type: 3}
+  forceJumpOnLanding: 0
   sr: {fileID: 0}
 --- !u!61 &677788721
 BoxCollider2D:
@@ -3224,7 +3225,7 @@ GameObject:
   - component: {fileID: 1003529963}
   - component: {fileID: 1003529962}
   m_Layer: 0
-  m_Name: PlatformSwitch (2)
+  m_Name: TimelimitSwitch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3246,7 +3247,7 @@ MonoBehaviour:
   offSprite: {fileID: 21300000, guid: 9a0a4f6fcb244df3b3dbd0402e5a6f01, type: 3}
   onSprite: {fileID: 21300000, guid: d7c6c6dd220b41f7a6b890bde45734d2, type: 3}
   isOn: 0
-  switchType: 0
+  switchType: 6
 --- !u!61 &1003529963
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4231,7 +4232,7 @@ GameObject:
   - component: {fileID: 1725778693}
   - component: {fileID: 1725778692}
   m_Layer: 0
-  m_Name: PlatformSwitch_Label (2)
+  m_Name: TimelimitSwitch_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

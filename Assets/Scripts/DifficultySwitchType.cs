@@ -4,5 +4,7 @@ public enum DifficultySwitchType
     CoinIncrease,
     CoinPositionHard,
     SmallPlatform,
-    SpikeIncrease
+    SpikeIncrease,
+    ForceJump,
+    TimeLimit
 }

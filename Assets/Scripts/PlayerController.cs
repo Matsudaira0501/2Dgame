@@ -20,12 +20,15 @@ public class PlayerController : MonoBehaviour
     public bool restartOnFall = true;
     public float fallRestartY = -8f;
     public AudioClip jumpSound;
+    [SerializeField]
+    private bool forceJumpOnLanding;
 
     private Rigidbody2D rb;
     private BoxCollider2D bodyCollider;
     [SerializeField]
     private SpriteRenderer sr;
     private bool isGrounded;
+    private bool wasGrounded;
     private bool isRestarting;
 
     void Awake()
@@ -46,10 +49,19 @@ public class PlayerController : MonoBehaviour
         }
 
         CheckFallRestart();
+        CheckGround();
+
+        bool jumpedThisFrame = false;
+        if (forceJumpOnLanding && isGrounded && !wasGrounded)
+        {
+            Jump();
+            jumpedThisFrame = true;
+        }
 
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
         {
+            wasGrounded = isGrounded;
             return;
         }
 
@@ -68,15 +80,27 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = new Vector2(move * moveSpeed, rb.linearVelocity.y);
 
-        CheckGround();
-
-        if ((keyboard.spaceKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame) && isGrounded)
+        if (!jumpedThisFrame &&
+            (keyboard.spaceKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame) &&
+            isGrounded)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
-            if (jumpSound != null)
-            {
-                AudioSource.PlayClipAtPoint(jumpSound, transform.position);
-            }
+            Jump();
+        }
+
+        wasGrounded = isGrounded;
+    }
+
+    public void SetForceJumpOnLanding(bool isEnabled)
+    {
+        forceJumpOnLanding = isEnabled;
+    }
+
+    private void Jump()
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+        if (jumpSound != null)
+        {
+            AudioSource.PlayClipAtPoint(jumpSound, transform.position);
         }
     }
 
