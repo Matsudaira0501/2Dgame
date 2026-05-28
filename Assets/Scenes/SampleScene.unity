@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 466864165}
   - component: {fileID: 466864166}
   - component: {fileID: 466864167}
+  - component: {fileID: 466864168}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -320,9 +321,19 @@ MonoBehaviour:
   clearText: {fileID: 0}
   displayFont: {fileID: 12800000, guid: cc7405f159a70e346a432c1767de5479, type: 3}
   clearMessage: Game Clear!
+  finalClearMessage: All Clear!
+  clearFontSize: 100
+  finalClearFontSize: 200
   clearSound: {fileID: 8300000, guid: add1782518c7fce4aa7b7259054c1705, type: 3}
+  finalClearSounds:
+  - {fileID: 8300000, guid: c5cc2b4992facf34f9c8712891d71c36, type: 3}
+  - {fileID: 8300000, guid: 2be240de5867c3840933ba8c533d8f2c, type: 3}
+  - {fileID: 8300000, guid: 7a845178a5eedcd418dc51423967af13, type: 3}
   restartDelay: 3
+  finalClearDelay: 5
   nextSceneName: DifficultyScene
+  finalClearSceneName: TitleScene
+  rankingSubmitter: {fileID: 466864168}
 --- !u!114 &466864166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +385,22 @@ MonoBehaviour:
   spikeObjects:
   - {fileID: 2500000001}
   playerController: {fileID: 1757440653}
+--- !u!114 &466864168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466864162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0b9dbf32e284077a605ac5e65424c47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hmacKey: c3MM/3kf3bcr4fP7n1oh60+M/aPpEJ0dZ3c55Kw4X7GM5dG5KGNtJ7SacTj7jv5wwD7+xIOvDcX4vKz74/vJPg==
+  clearTimeBoardNo: 1
+  submitOnlyFinalClear: 1
+  submitTimeAsWholeSeconds: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2250,8 +2277,8 @@ Transform:
   m_GameObject: {fileID: 3000000001}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0314, y: 0.0241, z: 2}
-  m_LocalScale: {x: 1.7419233, y: 1.2826076, z: 1}
+  m_LocalPosition: {x: -0.0314, y: -0.0337, z: 2}
+  m_LocalScale: {x: 1.7419233, y: 1.328129, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2432,9 +2459,106 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27f6d6a6f45d4ac2a1c6f95ed710b9c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 7
+  defaultTimeLimit: 6
   normalColor: {r: 0, g: 0, b: 0, a: 1}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
+  timeLimitSettings:
+  - label: Coin:0 Position:0 Platform:0 Spike:0
+    coinIncrease: 0
+    coinPositionHard: 0
+    smallPlatform: 0
+    spikeIncrease: 0
+    timeLimit: 2
+  - label: Coin:0 Position:0 Platform:0 Spike:1
+    coinIncrease: 0
+    coinPositionHard: 0
+    smallPlatform: 0
+    spikeIncrease: 1
+    timeLimit: 2
+  - label: Coin:0 Position:0 Platform:1 Spike:0
+    coinIncrease: 0
+    coinPositionHard: 0
+    smallPlatform: 1
+    spikeIncrease: 0
+    timeLimit: 2
+  - label: Coin:0 Position:0 Platform:1 Spike:1
+    coinIncrease: 0
+    coinPositionHard: 0
+    smallPlatform: 1
+    spikeIncrease: 1
+    timeLimit: 3
+  - label: Coin:0 Position:1 Platform:0 Spike:0
+    coinIncrease: 0
+    coinPositionHard: 1
+    smallPlatform: 0
+    spikeIncrease: 0
+    timeLimit: 3
+  - label: Coin:0 Position:1 Platform:0 Spike:1
+    coinIncrease: 0
+    coinPositionHard: 1
+    smallPlatform: 0
+    spikeIncrease: 1
+    timeLimit: 3
+  - label: Coin:0 Position:1 Platform:1 Spike:0
+    coinIncrease: 0
+    coinPositionHard: 1
+    smallPlatform: 1
+    spikeIncrease: 0
+    timeLimit: 3
+  - label: Coin:0 Position:1 Platform:1 Spike:1
+    coinIncrease: 0
+    coinPositionHard: 1
+    smallPlatform: 1
+    spikeIncrease: 1
+    timeLimit: 4
+  - label: Coin:1 Position:0 Platform:0 Spike:0
+    coinIncrease: 1
+    coinPositionHard: 0
+    smallPlatform: 0
+    spikeIncrease: 0
+    timeLimit: 3
+  - label: Coin:1 Position:0 Platform:0 Spike:1
+    coinIncrease: 1
+    coinPositionHard: 0
+    smallPlatform: 0
+    spikeIncrease: 1
+    timeLimit: 4
+  - label: Coin:1 Position:0 Platform:1 Spike:0
+    coinIncrease: 1
+    coinPositionHard: 0
+    smallPlatform: 1
+    spikeIncrease: 0
+    timeLimit: 4
+  - label: Coin:1 Position:0 Platform:1 Spike:1
+    coinIncrease: 1
+    coinPositionHard: 0
+    smallPlatform: 1
+    spikeIncrease: 1
+    timeLimit: 4
+  - label: Coin:1 Position:1 Platform:0 Spike:0
+    coinIncrease: 1
+    coinPositionHard: 1
+    smallPlatform: 0
+    spikeIncrease: 0
+    timeLimit: 4
+  - label: Coin:1 Position:1 Platform:0 Spike:1
+    coinIncrease: 1
+    coinPositionHard: 1
+    smallPlatform: 0
+    spikeIncrease: 1
+    timeLimit: 6
+  - label: Coin:1 Position:1 Platform:1 Spike:0
+    coinIncrease: 1
+    coinPositionHard: 1
+    smallPlatform: 1
+    spikeIncrease: 0
+    timeLimit: 6
+  - label: Coin:1 Position:1 Platform:1 Spike:1
+    coinIncrease: 1
+    coinPositionHard: 1
+    smallPlatform: 1
+    spikeIncrease: 1
+    timeLimit: 7
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

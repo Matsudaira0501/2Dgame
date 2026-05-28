@@ -10,6 +10,9 @@ public static class DifficultySettings
     public static bool AnySwitchOn =>
         CoinIncrease || CoinPositionHard || SmallPlatform || SpikeIncrease || ForceJump || TimeLimit;
 
+    public static bool AllSwitchesOn =>
+        CoinIncrease && CoinPositionHard && SmallPlatform && SpikeIncrease && ForceJump && TimeLimit;
+
     public static void SetSwitch(DifficultySwitchType switchType, bool isOn)
     {
         switch (switchType)

@@ -4,8 +4,19 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(TextMesh))]
 public class StageTimer : MonoBehaviour
 {
+    [System.Serializable]
+    private class TimeLimitSetting
+    {
+        public string label;
+        public bool coinIncrease;
+        public bool coinPositionHard;
+        public bool smallPlatform;
+        public bool spikeIncrease;
+        public float timeLimit = 6f;
+    }
+
     [SerializeField]
-    private float timeLimit = 7f;
+    private float defaultTimeLimit = 6f;
 
     [SerializeField]
     private Color normalColor = Color.black;
@@ -13,7 +24,11 @@ public class StageTimer : MonoBehaviour
     [SerializeField]
     private Color warningColor = Color.red;
 
+    [SerializeField]
+    private TimeLimitSetting[] timeLimitSettings;
+
     private TextMesh timerText;
+    private MeshRenderer timerRenderer;
     private float remainingTime;
     private bool isRunning;
     private bool isRestarting;
@@ -21,20 +36,47 @@ public class StageTimer : MonoBehaviour
     void Awake()
     {
         timerText = GetComponent<TextMesh>();
+        timerRenderer = GetComponent<MeshRenderer>();
     }
 
     void Start()
     {
         isRunning = DifficultySettings.TimeLimit;
-        gameObject.SetActive(isRunning);
+        SetTimerVisible(isRunning);
 
         if (!isRunning)
         {
             return;
         }
 
-        remainingTime = timeLimit;
+        remainingTime = GetTimeLimit();
         UpdateTimerText();
+    }
+
+    private float GetTimeLimit()
+    {
+        if (timeLimitSettings == null)
+        {
+            return defaultTimeLimit;
+        }
+
+        foreach (TimeLimitSetting setting in timeLimitSettings)
+        {
+            if (MatchesCurrentDifficulty(setting))
+            {
+                return setting.timeLimit;
+            }
+        }
+
+        return defaultTimeLimit;
+    }
+
+    private bool MatchesCurrentDifficulty(TimeLimitSetting setting)
+    {
+        return setting.coinIncrease == DifficultySettings.CoinIncrease &&
+            setting.coinPositionHard == DifficultySettings.CoinPositionHard &&
+            setting.smallPlatform == DifficultySettings.SmallPlatform &&
+            setting.spikeIncrease == DifficultySettings.SpikeIncrease;
     }
 
     void Update()
@@ -63,6 +105,14 @@ public class StageTimer : MonoBehaviour
     {
         timerText.text = $"Time: {Mathf.CeilToInt(remainingTime)}";
         timerText.color = remainingTime <= 1f ? warningColor : normalColor;
+    }
+
+    private void SetTimerVisible(bool isVisible)
+    {
+        if (timerRenderer != null)
+        {
+            timerRenderer.enabled = isVisible;
+        }
     }
 
     private void RestartScene()

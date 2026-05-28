@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
         if (jumpSound != null)
         {
-            AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+            AudioSource.PlayClipAtPoint(jumpSound, transform.position, GameSettings.SfxVolume);
         }
     }
 

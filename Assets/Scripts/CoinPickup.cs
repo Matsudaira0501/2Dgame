@@ -58,7 +58,7 @@ public class CoinPickup : MonoBehaviour
 
         if (collectSound != null)
         {
-            AudioSource.PlayClipAtPoint(collectSound, collectorPosition, collectSoundVolume);
+            AudioSource.PlayClipAtPoint(collectSound, collectorPosition, collectSoundVolume * GameSettings.SfxVolume);
         }
 
         if (destroyOnCollect)

@@ -17,16 +17,38 @@ public class GameClearManager : MonoBehaviour
     private string clearMessage = "Game Clear!";
 
     [SerializeField]
+    private string finalClearMessage = "All Clear!";
+
+    [SerializeField]
+    private int clearFontSize = 100;
+
+    [SerializeField]
+    private int finalClearFontSize = 150;
+
+    [SerializeField]
     private AudioClip clearSound;
+
+    [SerializeField]
+    private AudioClip[] finalClearSounds;
 
     [SerializeField]
     private float restartDelay = 3f;
 
     [SerializeField]
+    private float finalClearDelay = 5f;
+
+    [SerializeField]
     private string nextSceneName = "DifficultyScene";
+
+    [SerializeField]
+    private string finalClearSceneName = "TitleScene";
+
+    [SerializeField]
+    private UnityroomRankingSubmitter rankingSubmitter;
 
     private int remainingCoins;
     private bool isCleared;
+    private bool isFinalClear;
 
     public bool IsCleared => isCleared;
 
@@ -43,6 +65,7 @@ public class GameClearManager : MonoBehaviour
 
     void Start()
     {
+        ClearTimeTracker.StartRunIfNeeded();
         remainingCoins = FindObjectsByType<CoinPickup>(FindObjectsInactive.Exclude).Length;
 
         if (clearText == null)
@@ -53,7 +76,7 @@ public class GameClearManager : MonoBehaviour
         if (clearText != null)
         {
             clearText.font = GetDisplayFont();
-            clearText.fontSize = 100;
+            clearText.fontSize = clearFontSize;
             clearText.color = Color.black;
             clearText.text = clearMessage;
             clearText.gameObject.SetActive(false);
@@ -86,34 +109,114 @@ public class GameClearManager : MonoBehaviour
     private void ClearGame()
     {
         isCleared = true;
+        isFinalClear = DifficultySettings.AllSwitchesOn;
 
         if (clearText != null)
         {
+            clearText.text = isFinalClear ? finalClearMessage : clearMessage;
+            clearText.fontSize = isFinalClear ? finalClearFontSize : clearFontSize;
             clearText.gameObject.SetActive(true);
         }
 
-        Debug.Log(clearMessage);
+        Debug.Log(isFinalClear ? finalClearMessage : clearMessage);
         if (clearSound != null)
         {
-            AudioSource.PlayClipAtPoint(clearSound, Vector3.zero);
+            AudioSource.PlayClipAtPoint(clearSound, Vector3.zero, GameSettings.SfxVolume);
         }
 
+        if (isFinalClear)
+        {
+            PlayFinalClearSounds();
+        }
+
+        SubmitClearTime();
+
         StartCoroutine(LoadSceneAfterClear());
+    }
+
+    private void SubmitClearTime()
+    {
+        if (!isFinalClear)
+        {
+            return;
+        }
+
+        float clearTime = ClearTimeTracker.StopRun();
+
+        if (rankingSubmitter == null)
+        {
+            rankingSubmitter = GetComponent<UnityroomRankingSubmitter>();
+        }
+
+        if (rankingSubmitter != null)
+        {
+            rankingSubmitter.SubmitClearTime(clearTime, isFinalClear);
+        }
+    }
+
+    [ContextMenu("Preview Final Clear")]
+    private void PreviewFinalClear()
+    {
+        StopAllCoroutines();
+        isCleared = true;
+        isFinalClear = true;
+
+        if (clearText == null)
+        {
+            clearText = CreateClearText();
+        }
+
+        if (clearText != null)
+        {
+            clearText.font = GetDisplayFont();
+            clearText.fontSize = finalClearFontSize;
+            clearText.color = Color.black;
+            clearText.text = finalClearMessage;
+            clearText.gameObject.SetActive(true);
+        }
+
+        if (clearSound != null)
+        {
+            AudioSource.PlayClipAtPoint(clearSound, Vector3.zero, GameSettings.SfxVolume);
+        }
+
+        PlayFinalClearSounds();
+    }
+
+    private void PlayFinalClearSounds()
+    {
+        if (finalClearSounds == null)
+        {
+            return;
+        }
+
+        foreach (AudioClip sound in finalClearSounds)
+        {
+            if (sound != null)
+            {
+                AudioSource.PlayClipAtPoint(sound, Vector3.zero, GameSettings.SfxVolume);
+            }
+        }
     }
 
     private IEnumerator LoadSceneAfterClear()
     {
         Time.timeScale = 0f;
-        yield return new WaitForSecondsRealtime(restartDelay);
+        
+        float delay = isFinalClear ? finalClearDelay : restartDelay;
+        yield return new WaitForSecondsRealtime(delay);
+        
         Time.timeScale = 1f;
 
-        if (string.IsNullOrEmpty(nextSceneName))
+        string sceneName = isFinalClear ? finalClearSceneName : nextSceneName;
+
+        if (string.IsNullOrEmpty(sceneName))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             yield break;
         }
 
-        SceneManager.LoadScene(nextSceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     private Text CreateClearText()
