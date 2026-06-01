@@ -1677,6 +1677,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &910000001 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+  m_PrefabInstance: {fileID: 910000003}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &910000002 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 233070779, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+  m_PrefabInstance: {fileID: 910000003}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &910000003
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 677788719}
+    m_Modifications:
+    - target: {fileID: 233070779, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_Controller
+      value:
+      objectReference: {fileID: 9100000, guid: 231100e0a831fce47abae5896bf804f5, type: 2}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -11.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456756130, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 75724826456986498, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
+      propertyPath: m_Name
+      value: Ninja_Cat_IK_Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 37738d4257bf02b40963ea4e2ca80cc1, type: 3}
 --- !u!1 &677788718
 GameObject:
   m_ObjectHideFlags: 0
@@ -1711,6 +1770,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 377615731}
+  - {fileID: 910000001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &677788720
@@ -1740,6 +1800,11 @@ MonoBehaviour:
   jumpSound: {fileID: 8300000, guid: e58bbaaed8235394994e39ac7d594773, type: 3}
   forceJumpOnLanding: 0
   sr: {fileID: 0}
+  visualRoot: {fileID: 910000001}
+  visualFacesRight: 1
+  characterAnimator: {fileID: 910000002}
+  fallAnimationVelocityThreshold: -0.5
+  fallAnimationDelay: 0.1
 --- !u!61 &677788721
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1821,7 +1886,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677788718}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

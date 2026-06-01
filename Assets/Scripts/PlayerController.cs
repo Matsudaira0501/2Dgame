@@ -27,15 +27,36 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D bodyCollider;
     [SerializeField]
     private SpriteRenderer sr;
+    [SerializeField]
+    private Transform visualRoot;
+    [SerializeField]
+    private bool visualFacesRight = true;
+    [SerializeField]
+    private Animator characterAnimator;
+    [SerializeField]
+    private float fallAnimationVelocityThreshold = -0.5f;
+    [SerializeField]
+    private float fallAnimationDelay = 0.1f;
     private bool isGrounded;
     private bool wasGrounded;
     private bool isRestarting;
+    private Vector3 visualRootDefaultScale;
+    private float characterAnimatorDefaultSpeed = 1f;
+    private float lastGroundedTime;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         bodyCollider = GetComponent<BoxCollider2D>();
         sr = GetComponent<SpriteRenderer>();
+        if (visualRoot != null)
+        {
+            visualRootDefaultScale = visualRoot.localScale;
+        }
+        if (characterAnimator != null)
+        {
+            characterAnimatorDefaultSpeed = characterAnimator.speed;
+        }
         rb.freezeRotation = true;
         FitColliderToSprite();
     }
@@ -50,6 +71,10 @@ public class PlayerController : MonoBehaviour
 
         CheckFallRestart();
         CheckGround();
+        if (isGrounded)
+        {
+            lastGroundedTime = Time.time;
+        }
 
         bool jumpedThisFrame = false;
         if (forceJumpOnLanding && isGrounded && !wasGrounded)
@@ -61,6 +86,7 @@ public class PlayerController : MonoBehaviour
         Keyboard keyboard = Keyboard.current;
         if (keyboard == null)
         {
+            UpdateAnimation(false);
             wasGrounded = isGrounded;
             return;
         }
@@ -69,13 +95,13 @@ public class PlayerController : MonoBehaviour
         if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed)
         {
             move -= 1f;
-            sr.flipX = true;
+            SetFacingDirection(true);
         }
 
         if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed)
         {
             move += 1f;
-            sr.flipX = false;
+            SetFacingDirection(false);
         }
 
         rb.linearVelocity = new Vector2(move * moveSpeed, rb.linearVelocity.y);
@@ -87,7 +113,38 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
 
+        UpdateAnimation(!Mathf.Approximately(move, 0f));
         wasGrounded = isGrounded;
+    }
+
+    private void SetFacingDirection(bool faceLeft)
+    {
+        if (visualRoot == null)
+        {
+            sr.flipX = faceLeft;
+            return;
+        }
+
+        bool shouldFlip = visualFacesRight ? faceLeft : !faceLeft;
+        visualRoot.localScale = new Vector3(
+            Mathf.Abs(visualRootDefaultScale.x) * (shouldFlip ? -1f : 1f),
+            visualRootDefaultScale.y,
+            visualRootDefaultScale.z);
+    }
+
+    private void UpdateAnimation(bool hasMovementInput)
+    {
+        if (characterAnimator != null)
+        {
+            bool landedThisFrame = isGrounded && !wasGrounded;
+            bool isFalling = !isGrounded &&
+                rb.linearVelocity.y < fallAnimationVelocityThreshold &&
+                Time.time - lastGroundedTime >= fallAnimationDelay;
+            characterAnimator.SetBool("IsFalling", isFalling);
+            characterAnimator.speed = isFalling || hasMovementInput || landedThisFrame
+                ? characterAnimatorDefaultSpeed
+                : 0f;
+        }
     }
 
     public void SetForceJumpOnLanding(bool isEnabled)
@@ -98,6 +155,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+
         if (jumpSound != null)
         {
             AudioSource.PlayClipAtPoint(jumpSound, transform.position, GameSettings.SfxVolume);

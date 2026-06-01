@@ -35,3 +35,7 @@ sysinfo.txt
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Asset Store packages: import locally from My Assets
+/Assets/2D Animated Characters samples/
+/Assets/2D Animated Characters samples.meta
