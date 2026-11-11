@@ -39,3 +39,7 @@ Thumbs.db
 # Asset Store packages: import locally from My Assets
 /Assets/2D Animated Characters samples/
 /Assets/2D Animated Characters samples.meta
+
+# Local-only unityroom ranking key (never commit to Git)
+/Assets/Resources/unityroom-ranking-hmac.txt
+/Assets/Resources/unityroom-ranking-hmac.txt.meta
