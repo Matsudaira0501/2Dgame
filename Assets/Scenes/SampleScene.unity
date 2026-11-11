@@ -564,7 +564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b9dbf32e284077a605ac5e65424c47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hmacKey: c3MM/3kf3bcr4fP7n1oh60+M/aPpEJ0dZ3c55Kw4X7GM5dG5KGNtJ7SacTj7jv5wwD7+xIOvDcX4vKz74/vJPg==
+  hmacKey:
   clearTimeBoardNo: 1
   submitOnlyFinalClear: 1
   submitTimeAsWholeSeconds: 1
