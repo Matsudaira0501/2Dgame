@@ -43,3 +43,11 @@ Thumbs.db
 # Local-only unityroom ranking key (never commit to Git)
 /Assets/Resources/unityroom-ranking-hmac.txt
 /Assets/Resources/unityroom-ranking-hmac.txt.meta
+
+# Local secrets and signing/certificate files
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
