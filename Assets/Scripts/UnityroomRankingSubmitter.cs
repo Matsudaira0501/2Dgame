@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class UnityroomRankingSubmitter : MonoBehaviour
 {
-    [SerializeField]
-    private string hmacKey = "";
+    // Git管理外のResourcesテキストから読み込む（シーンへのキー直書きを防ぐ）。
+    private const string HmacResourceName = "unityroom-ranking-hmac";
 
     [SerializeField]
     private int clearTimeBoardNo = 1;
@@ -30,7 +30,11 @@ public class UnityroomRankingSubmitter : MonoBehaviour
             return;
         }
 
-        ConfigureHmacKey(client);
+        if (!TryConfigureHmacKey(client))
+        {
+            return;
+        }
+
         float score = ConvertClearTimeToScore(clearTime);
         client.SendScore(clearTimeBoardNo, score, ScoreboardWriteMode.HighScoreAsc);
         Debug.Log($"Sent clear time to unityroom: {clearTime:F2}s Score={score}");
@@ -58,18 +62,18 @@ public class UnityroomRankingSubmitter : MonoBehaviour
         clientObject.SetActive(false);
 
         UnityroomApiClient clientComponent = clientObject.AddComponent<UnityroomApiClient>();
-        ConfigureHmacKey(clientComponent);
-
         clientObject.SetActive(true);
         return clientComponent;
     }
 
-    private void ConfigureHmacKey(UnityroomApiClient client)
+    private bool TryConfigureHmacKey(UnityroomApiClient client)
     {
-        if (string.IsNullOrEmpty(hmacKey))
+        TextAsset keyText = Resources.Load<TextAsset>(HmacResourceName);
+        string hmacKey = keyText != null ? keyText.text.Trim() : "";
+        if (string.IsNullOrWhiteSpace(hmacKey))
         {
-            Debug.LogWarning("Unityroom Hmac Key is empty. Set it on UnityroomRankingSubmitter or UnityroomApiClient.");
-            return;
+            Debug.LogWarning("Ranking key is missing. Create Assets/Resources/unityroom-ranking-hmac.txt locally (ignored by Git).");
+            return false;
         }
 
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -78,16 +82,17 @@ public class UnityroomRankingSubmitter : MonoBehaviour
         if (property != null && property.CanWrite)
         {
             property.SetValue(client, hmacKey);
-            return;
+            return true;
         }
 
         FieldInfo field = typeof(UnityroomApiClient).GetField("HmacKey", flags);
         if (field != null)
         {
             field.SetValue(client, hmacKey);
-            return;
+            return true;
         }
 
-        Debug.LogWarning("Unityroom Hmac Key field was not found. Set it on the UnityroomApiClient inspector.");
+        Debug.LogWarning("UnityroomApiClient HmacKey property or field was not found.");
+        return false;
     }
 }
